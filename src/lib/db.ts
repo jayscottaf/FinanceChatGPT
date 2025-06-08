@@ -5,8 +5,32 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-const db = global.prisma || new PrismaClient();
+let db: PrismaClient;
 
-if (process.env.NODE_ENV !== "production") global.prisma = db;
+if (process.env.NODE_ENV === "production") {
+  db = new PrismaClient();
+} else {
+  if (!global.prisma) {
+    global.prisma = new PrismaClient({
+      log: ['error'],
+    });
+  }
+  db = global.prisma;
+}
+
+// Test database connection
+async function testConnection() {
+  try {
+    await db.$connect();
+    console.log("Database connected successfully");
+  } catch (error) {
+    console.error("Database connection failed:", error.message);
+  }
+}
+
+// Only test connection if POSTGRES_PRISMA_URL is set
+if (process.env.POSTGRES_PRISMA_URL) {
+  testConnection();
+}
 
 export default db;

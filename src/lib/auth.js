@@ -10,7 +10,8 @@ console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
 
 export const authOptions = {
     pages: {
-        signIn: "/"
+        signIn: "/auth/signin",
+        error: "/auth/error",
     },
     session: {
         strategy: "jwt"
@@ -18,8 +19,8 @@ export const authOptions = {
     },
     providers: [
         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET
+            clientId: process.env.GOOGLE_CLIENT_ID || "",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
         })
     ],
     callbacks: {
