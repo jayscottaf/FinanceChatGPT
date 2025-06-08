@@ -55,5 +55,9 @@ export const authOptions = {
             session = { ...session, ...token };
             return session;
         }
-    }
+    },
+    // Use dynamic URL for better port handling
+    ...(process.env.NEXTAUTH_URL && { 
+        url: process.env.NEXTAUTH_URL 
+    })
 };

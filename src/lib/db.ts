@@ -31,6 +31,8 @@ async function testConnection() {
 // Only test connection if POSTGRES_PRISMA_URL is set
 if (process.env.POSTGRES_PRISMA_URL) {
   testConnection();
+} else {
+  console.warn("POSTGRES_PRISMA_URL not set - database features will be unavailable");
 }
 
 export default db;
