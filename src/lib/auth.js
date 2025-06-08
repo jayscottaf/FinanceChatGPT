@@ -2,6 +2,12 @@ import GoogleProvider from "next-auth/providers/google";
 import apiCall from "@/utils/apiCall";
 import { signIn } from "@/server/auth"
 
+// Debug environment variables
+console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID ? "Set" : "Missing");
+console.log("GOOGLE_CLIENT_SECRET:", process.env.GOOGLE_CLIENT_SECRET ? "Set" : "Missing");
+console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET ? "Set" : "Missing");
+console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+
 export const authOptions = {
     pages: {
         signIn: "/"
