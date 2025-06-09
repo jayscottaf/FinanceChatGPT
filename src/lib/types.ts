@@ -7,6 +7,7 @@ export interface Chat extends Record<string, any> {
     userId: string;
     path: string;
     messages: Message[];
+    sharePath?: string;
 }
 
 export type ServerActionResult<Result> = Promise<
@@ -26,11 +27,12 @@ export type UserSession = {
 };
 
 export interface ExtendedSession {
-    id: string;
-    name?: string;
-    email?: string;
-    image?: string;
-    isAdmin?: boolean;
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+  isAdmin: boolean;
+  isNewUser: boolean;
 }
 
 export type User = {

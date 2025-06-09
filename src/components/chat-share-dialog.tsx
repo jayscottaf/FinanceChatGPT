@@ -1,10 +1,11 @@
 'use client'
 
 import * as React from 'react'
-import type { DialogProps } from '@radix-ui/react-dialog';
+import type { DialogProps } from '@radix-ui/react-dialog'
 import { toast } from 'sonner'
 
-import { ServerActionResult, type Chat } from '@/lib/types'
+import { shareChat } from '@/app/actions/chat' // ✅ Import directly
+import type { Chat } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -19,33 +20,34 @@ import { useCopyToClipboard } from '@/lib/hooks/use-copy-to-clipboard'
 
 interface ChatShareDialogProps extends DialogProps {
   chat: Pick<Chat, 'id' | 'title' | 'messages'>
-  shareChat: (id: string) => ServerActionResult<Chat>
-  onCopy: () => void
 }
 
 export function ChatShareDialog({
   chat,
-  shareChat,
-  onCopy,
   ...props
 }: ChatShareDialogProps) {
   const { copyToClipboard } = useCopyToClipboard({ timeout: 1000 })
   const [isSharePending, startShareTransition] = React.useTransition()
 
-  const copyShareLink = React.useCallback(
-    async (chat: Chat) => {
-      if (!chat.sharePath) {
-        return toast.error('Could not copy share link to clipboard')
-      }
+  const handleCopyClick = async () => {
+    const result = await shareChat(chat.id)
 
-      const url = new URL(window.location.href)
-      url.pathname = chat.sharePath
-      copyToClipboard(url.toString())
-      onCopy()
-      toast.success('Share link copied to clipboard')
-    },
-    [copyToClipboard, onCopy]
-  )
+    if (!result || 'error' in result) {
+      toast.error(result?.error ?? 'Unknown error')
+      return
+    }
+
+    if (!result.sharePath) {
+      toast.error('Could not copy share link to clipboard')
+      return
+    }
+
+    const url = new URL(window.location.href)
+    url.pathname = result.sharePath
+
+    copyToClipboard(url.toString())
+    toast.success('Share link copied to clipboard')
+  }
 
   return (
     <Dialog {...props}>
@@ -63,23 +65,7 @@ export function ChatShareDialog({
           </div>
         </div>
         <DialogFooter className="items-center">
-          <Button
-            disabled={isSharePending}
-            onClick={() => {
-              // @ts-ignore
-              startShareTransition(async () => {
-                const result = await shareChat(chat.id)
-
-                if (!result || 'error' in result) {
-                  toast.error(result?.error ?? 'Unknown error')
-                  return
-                }
-
-                copyShareLink(result as Chat)
-
-              })
-            }}
-          >
+          <Button disabled={isSharePending} onClick={() => startShareTransition(handleCopyClick)}>
             {isSharePending ? (
               <>
                 <IconSpinner className="mr-2 animate-spin" />
