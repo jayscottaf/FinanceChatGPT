@@ -3,11 +3,12 @@ import { Sidebar } from '@/components/sidebar'
 // import { auth } from '@/lib/auth'
 import { ChatHistory } from '@/components/chat-history'
 import { getFullUserInfo } from '@/app/actions/auth'
+import type { UserSession } from '@/lib/types'
 import { SidebarMobile } from './sidebar-mobile';
 
 export async function SidebarDesktop() {
   // const session = await auth()
-  const session = await getFullUserInfo();
+  const session = (await getFullUserInfo()) as UserSession;
 
   if (!session?.id) {
     return null

@@ -36,7 +36,7 @@ const DropdownUser = () => {
         };
         document.addEventListener("click", clickHandler);
         return () => document.removeEventListener("click", clickHandler);
-    });
+    }, []);
 
     // close if the esc key is pressed
     useEffect(() => {
@@ -46,7 +46,7 @@ const DropdownUser = () => {
         };
         document.addEventListener("keydown", keyHandler);
         return () => document.removeEventListener("keydown", keyHandler);
-    });
+    }, [dropdownOpen]);
     const refreshTransactions = () => {
         dispatch(allTransactionSync() as any);
     };

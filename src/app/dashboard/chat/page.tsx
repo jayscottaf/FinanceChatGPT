@@ -9,7 +9,7 @@ import { getFullUserInfo } from '@/app/actions/auth';
 export default async function IndexPage() {
   const id = nanoid()
   // const session = await auth()
-  const session = await getFullUserInfo();
+  const session = (await getFullUserInfo()) as UserSession;
   const missingKeys = await getMissingKeys()
 
   return (

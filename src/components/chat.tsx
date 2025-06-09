@@ -48,7 +48,7 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
 
   useEffect(() => {
     setNewChatId(id)
-  })
+  }, [id, setNewChatId])
 
   useEffect(() => {
     missingKeys.map(key => {
