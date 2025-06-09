@@ -70,12 +70,13 @@ export function ChatShareDialog({
               startShareTransition(async () => {
                 const result = await shareChat(chat.id)
 
-                if (result && 'error' in result) {
-                  toast.error(result.error)
+                if (!result || 'error' in result) {
+                  toast.error(result?.error ?? 'Unknown error')
                   return
                 }
 
-                copyShareLink(result)
+                copyShareLink(result as Chat)
+
               })
             }}
           >
