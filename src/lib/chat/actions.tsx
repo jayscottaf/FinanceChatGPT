@@ -131,7 +131,7 @@ export const AI = createAI<AIState, UIState>({
     const aiState = getAIState() as Chat
     if (!aiState) return
 
-    return getUIStateFromAIState(aiState)
+    return await getUIStateFromAIState(aiState)
   },
   onSetAIState: async ({ state }) => {
     'use server'
@@ -158,7 +158,7 @@ export const AI = createAI<AIState, UIState>({
   }
 })
 
-export const getUIStateFromAIState = (aiState: Chat) => {
+export const getUIStateFromAIState = async (aiState: Chat) => {
   return aiState.messages
     .filter(message => message.role !== 'system')
     .map((message, index) => ({
