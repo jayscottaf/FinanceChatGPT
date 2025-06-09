@@ -63,7 +63,7 @@ export const authOptions = {
             session.accessToken = token.accessToken;
             session = { ...session, ...token };
             return session;
-        }
+        },
     },
     // Use dynamic URL for better port handling
     ...(process.env.NEXTAUTH_URL && { 
