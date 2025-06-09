@@ -5,11 +5,11 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-const globalForPrisma = globalThis as { prisma?: PrismaClient };
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 let db: PrismaClient;
 
-if (process.env.NODE_ENV === "production") {
+if ((process.env as any).NODE_ENV === "production") {
   db = new PrismaClient();
 } else {
   if (!globalForPrisma.prisma) {
@@ -35,7 +35,7 @@ async function testConnection(): Promise<void> {
 }
 
 // Only test connection if POSTGRES_PRISMA_URL is set
-if (process.env.POSTGRES_PRISMA_URL) {
+if ((process.env as any).POSTGRES_PRISMA_URL) {
   void testConnection();
 } else {
   console.warn(
