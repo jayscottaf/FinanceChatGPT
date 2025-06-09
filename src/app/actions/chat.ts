@@ -6,6 +6,14 @@ import { type Chat } from '@/lib/types'
 import { getFullUserInfo } from './auth'
 import { kv } from '@vercel/kv'
 
+interface ExtendedSession {
+  id: string
+  name?: string
+  email?: string
+  image?: string
+  isAdmin?: boolean
+}
+
 export async function getChats(userId?: string | null) {
   if (!userId) {
     return []
@@ -40,7 +48,7 @@ export async function getChat(id: string, userId: string) {
 }
 
 export async function removeChat({ id, path }: { id: string; path: string }) {
-  const session = await getFullUserInfo()
+  const session = await getFullUserInfo() as ExtendedSession
 
   if (!session) {
     return {
@@ -64,7 +72,7 @@ export async function removeChat({ id, path }: { id: string; path: string }) {
 }
 
 export async function clearChats() {
-  const session = await getFullUserInfo();
+  const session = await getFullUserInfo() as ExtendedSession
 
   if (!session) {
     return {
@@ -90,7 +98,7 @@ export async function clearChats() {
 }
 
 export async function saveChat(chat: Chat) {
-  const session = await getFullUserInfo()
+  const session = await getFullUserInfo() as ExtendedSession
   
   if (session) {
     try {
