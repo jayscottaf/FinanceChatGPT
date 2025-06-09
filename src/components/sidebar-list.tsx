@@ -1,4 +1,4 @@
-import { clearChats, getChats } from '@/app/actions/chat'
+import { getChats } from '@/app/actions/chat'
 import { ClearHistory } from '@/components/clear-history'
 import { SidebarItems } from '@/components/sidebar-items'
 import { cache } from 'react'
@@ -30,7 +30,7 @@ export async function SidebarList({ userId }: SidebarListProps) {
         )}
       </div>
       <div className="flex items-center justify-end p-4">
-        <ClearHistory clearChats={clearChats} isEnabled={chats?.length > 0} />
+        <ClearHistory isEnabled={chats?.length > 0} />
       </div>
     </div>
   )

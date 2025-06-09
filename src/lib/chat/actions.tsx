@@ -18,7 +18,7 @@ import {
 } from '@/lib/utils'
 import { saveChat } from '@/app/actions/chat'
 import { SpinnerMessage, UserMessage } from '@/components/chatui/message'
-import { Chat } from '@/lib/types'
+import { Chat, type UserSession } from '@/lib/types'
 import { getFullUserInfo, getAccessToken } from '@/app/actions/auth'
 import CategoryTransactionsSkeleton from '@/components/chatui/category-transaction-skeleton'
 import CategoryTransactions from '@/components/chatui/category-transaction'
@@ -366,7 +366,7 @@ export const AI = createAI<AIState, UIState>({
   onGetUIState: async () => {
     'use server'
 
-    const session = await getFullUserInfo()
+    const session = (await getFullUserInfo()) as UserSession
 
     if (session) {
       const aiState = getAIState() as Chat
@@ -383,7 +383,7 @@ export const AI = createAI<AIState, UIState>({
     'use server'
 
     // const session = await auth()
-    const session = await getFullUserInfo();
+    const session = (await getFullUserInfo()) as UserSession;
 
     if (session) {
       const { chatId, messages } = state

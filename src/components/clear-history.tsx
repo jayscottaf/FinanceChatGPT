@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 
 import { ServerActionResult } from '@/lib/types'
 import { Button } from '@/components/ui/button'
+import { clearChats } from '@/app/actions/chat'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,13 +22,9 @@ import { IconSpinner } from '@/components/ui/icons'
 
 interface ClearHistoryProps {
   isEnabled: boolean
-  clearChats: () => ServerActionResult<void>
 }
 
-export function ClearHistory({
-  isEnabled = false,
-  clearChats
-}: ClearHistoryProps) {
+export function ClearHistory({ isEnabled = false }: ClearHistoryProps) {
   const [open, setOpen] = React.useState(false)
   const [isPending, startTransition] = React.useTransition()
   const router = useRouter()
