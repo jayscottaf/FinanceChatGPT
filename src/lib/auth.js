@@ -64,6 +64,14 @@ export const authOptions = {
             session = { ...session, ...token };
             return session;
         },
+        redirect({ url, baseUrl }) {
+            // If the URL is relative, use it; otherwise redirect to dashboard
+            if (url.startsWith("/")) return `${baseUrl}${url}`;
+            // If URL is external but on the same domain, allow it
+            if (url.startsWith(baseUrl)) return url;
+            // Default to dashboard
+            return `${baseUrl}/dashboard`;
+        }
     },
     // Use dynamic URL for better port handling
     ...(process.env.NEXTAUTH_URL && { 
