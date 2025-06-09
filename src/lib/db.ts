@@ -25,12 +25,8 @@ async function testConnection(): Promise<void> {
   try {
     await db.$connect();
     console.log("Database connected successfully");
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error("Database connection failed:", error.message);
-    } else {
-      console.error("Database connection failed:", error);
-    }
+  } catch (error: any) {
+    console.error("Database connection failed:", error?.message || error);
   }
 }
 
