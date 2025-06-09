@@ -1,5 +1,5 @@
 import { type Metadata } from 'next'
-import { notFound, redirect } from 'next/navigation'
+import { redirect } from 'next/navigation'
 
 // import { auth } from '@/auth'
 import { getFullUserInfo } from '@/app/actions/auth'
@@ -7,6 +7,11 @@ import { getChat, getMissingKeys } from '@/app/actions/chat'
 import { Chat } from '@/components/chat'
 import { AI } from '@/lib/chat/actions'
 import { UserSession } from '@/lib/types'
+
+interface ExtendedSession extends UserSession {
+  id: string  // ensure it's required
+}
+
 
 export interface ChatPageProps {
   params: {
@@ -18,7 +23,7 @@ export async function generateMetadata({
   params
 }: ChatPageProps): Promise<Metadata> {
   // const session = await auth()
-  const session = await getFullUserInfo();
+  const session = await getFullUserInfo() as ExtendedSession;
 
   if (!session?.id) {
     return {}
@@ -32,7 +37,7 @@ export async function generateMetadata({
 
 export default async function ChatPage({ params }: ChatPageProps) {
   // const session = (await auth()) as Session
-  const session = await getFullUserInfo();
+  const session = await getFullUserInfo() as ExtendedSession;
   const missingKeys = await getMissingKeys()
 
   if (!session?.id) {
