@@ -8,6 +8,15 @@ console.log("GOOGLE_CLIENT_SECRET:", process.env.GOOGLE_CLIENT_SECRET ? "Set" : 
 console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET ? "Set" : "Missing");
 console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
 
+// Dynamically set NEXTAUTH_URL so Google OAuth works in both
+// the deployed and Replit development environments.
+const isProd = process.env.NODE_ENV === "production";
+process.env.NEXTAUTH_URL =
+  process.env.NEXTAUTH_URL ||
+  (isProd
+    ? "https://budgetbuddy.replit.app"
+    : "https://608c4b3b-65b0-4a24-8a5a-03750d141826-00-ikkyw1uswydf.riker.replit.dev");
+
 export const authOptions = {
     pages: {
         signIn: "/auth/signin",
