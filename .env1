@@ -1,8 +1,0 @@
-
-NEXTAUTH_URL=https://608c4b3b-65b0-4a24-8a5a-03750d141826-00-ikkyw1uswydf.riker.replit.dev
-NEXTAUTH_SECRET=your_nextauth_secret_here
-
-# Add other required environment variables
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-POSTGRES_PRISMA_URL=your_postgres_prisma_url
