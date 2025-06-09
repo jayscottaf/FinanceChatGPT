@@ -23,6 +23,14 @@ export type UserSession = {
     image: string;
     isNewUser: boolean;
     isAdmin: boolean;
+};
+
+export interface ExtendedSession {
+    id: string;
+    name?: string;
+    email?: string;
+    image?: string;
+    isAdmin?: boolean;
 }
 
 export type User = {

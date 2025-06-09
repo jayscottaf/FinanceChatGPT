@@ -6,11 +6,7 @@ import { getFullUserInfo } from '@/app/actions/auth'
 import { getChat, getMissingKeys } from '@/app/actions/chat'
 import { Chat } from '@/components/chat'
 import { AI } from '@/lib/chat/actions'
-import { UserSession } from '@/lib/types'
-
-interface ExtendedSession extends UserSession {
-  id: string  // ensure it's required
-}
+import { ExtendedSession } from '@/lib/types'
 
 
 export interface ChatPageProps {
