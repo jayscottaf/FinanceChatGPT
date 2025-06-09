@@ -3,24 +3,17 @@
 import {
   createAI,
   getMutableAIState,
-  getAIState,
-  createStreamableValue
+  getAIState
 } from 'ai/rsc'
 import OpenAI from 'openai'
-import { BotCard, BotMessage } from '@/components/chatui/message'
-import { z } from 'zod'
-import { nanoid, sleep } from '@/lib/utils'
+import { BotCard, BotMessage, UserMessage } from '@/components/chatui/message'
+import { nanoid } from '@/lib/utils'
 import { saveChat } from '@/app/actions/chat'
-import { SpinnerMessage, UserMessage } from '@/components/chatui/message'
 import { Chat, type ExtendedSession } from '@/lib/types'
 import { getFullUserInfo, getAccessToken } from '@/app/actions/auth'
-import CategoryTransactionsSkeleton from '@/components/chatui/category-transaction-skeleton'
 import CategoryTransactions from '@/components/chatui/category-transaction'
-import RecurringTransactionsSkeleton from '@/components/chatui/recurring-transactions-skeleton'
 import RecurringTransactions from '@/components/chatui/recurring-transactions'
-import AccountCardsSkeleton from '@/components/chatui/account-cards-skeleton'
 import AccountCards from '@/components/chatui/account-cards'
-import AccountDetailSkeleton from '@/components/chatui/account-detail-skeleton'
 import AccountDetail from '@/components/chatui/account-detail'
 import { getChartInfo, getDashboard, getUserInfo } from '@/server/user'
 
@@ -31,7 +24,6 @@ const openai = new OpenAI({
 async function submitUserMessage(content: string) {
   'use server'
 
-  const accessToken = await getAccessToken()
   const filterDate = {
     startDate: new Date().getFullYear() + '-01-01',
     endDate: new Date().toISOString().split('T')[0]
@@ -55,15 +47,12 @@ async function submitUserMessage(content: string) {
     ]
   })
 
-  let textStream: ReturnType<typeof createStreamableValue<string>> | undefined
-  let textNode: React.ReactNode | undefined
-
   const ui = await openai.chat.completions.create({
     model: 'gpt-4o',
     messages: [
       {
         role: 'system',
-        content: `You are personal finance assistant. Here's the chart data, dashboard metrics, and account info:
+        content: `You are a personal finance assistant. Here's the chart data, dashboard metrics, and account info:
 
 Chart Data: ${JSON.stringify(chatData)}
 Filter Date: ${JSON.stringify(filterDate)}
@@ -73,7 +62,7 @@ Accounts: ${JSON.stringify(chatData3)}
 Respond helpfully based on the data.`
       },
       ...aiState.get().messages.map(({ role, content }) => ({
-        role,
+        role: role as 'user' | 'assistant' | 'system',
         content
       }))
     ],
@@ -104,6 +93,7 @@ export type Message = {
   role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool'
   content: string
   id: string
+  name?: string
 }
 
 export type AIState = {
@@ -125,18 +115,18 @@ export const AI = createAI<AIState, UIState>({
   onGetUIState: async () => {
     'use server'
 
-    const session = (await getFullUserInfo()) as ExtendedSession
+    const session = await getFullUserInfo() as ExtendedSession
     if (!session) return
 
     const aiState = getAIState() as Chat
     if (!aiState) return
 
-    return await getUIStateFromAIState(aiState)
+    return getUIStateFromAIState(aiState)
   },
   onSetAIState: async ({ state }) => {
     'use server'
 
-    const session = (await getFullUserInfo()) as ExtendedSession
+    const session = await getFullUserInfo() as ExtendedSession
     if (!session) return
 
     const { chatId, messages } = state
@@ -158,15 +148,17 @@ export const AI = createAI<AIState, UIState>({
   }
 })
 
-export const getUIStateFromAIState = async (aiState: Chat) => {
+export const getUIStateFromAIState = (aiState: Chat) => {
   return aiState.messages
     .filter(message => message.role !== 'system')
     .map((message, index) => ({
       id: `${aiState.chatId}-${index}`,
       display:
-        message.role === 'function' ? renderFunctionOutput(message) :
-        message.role === 'user' ? <UserMessage>{message.content}</UserMessage> :
-        <BotMessage content={message.content} />
+        message.role === 'function'
+          ? renderFunctionOutput(message)
+          : message.role === 'user'
+            ? <UserMessage>{message.content}</UserMessage>
+            : <BotMessage content={message.content} />
     }))
 }
 
