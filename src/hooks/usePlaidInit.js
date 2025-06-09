@@ -17,13 +17,13 @@ const usePlaidInit = () => {
         dispatch(
             setPlaidState({ linkToken: data.link_token, linkSuccess: true })
         );
-    }, [linkToken]);
+    }, [dispatch, linkToken]);
 
     useEffect(() => {
         if (linkToken === null || linkSuccess === false) {
             init();
         }
-    }, [linkToken]);
+    }, [init, linkToken, linkSuccess]);
 };
 
 export default usePlaidInit;

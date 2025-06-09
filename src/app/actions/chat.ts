@@ -5,14 +5,7 @@ import { redirect } from 'next/navigation'
 import { type Chat } from '@/lib/types'
 import { getFullUserInfo } from './auth'
 import { kv } from '@vercel/kv'
-
-interface ExtendedSession {
-  id: string
-  name?: string
-  email?: string
-  image?: string
-  isAdmin?: boolean
-}
+import { ExtendedSession } from '@/lib/types'
 
 export async function getChats(userId?: string | null) {
   if (!userId) {

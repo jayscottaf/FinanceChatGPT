@@ -24,9 +24,9 @@ const useGetAccounts = () => {
 		}
 	}, [dispatch]);
 
-	useEffect(() => {
-		fetchData();
-	}, [dispatch]);
-};
+        useEffect(() => {
+                fetchData();
+        }, [fetchData]);
+}; 
 
 export default useGetAccounts;
