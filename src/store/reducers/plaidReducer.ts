@@ -26,6 +26,7 @@ const initialState = {
     institutions: {},
     categories: [],
     personalFinanceCategories: [],
+    categoriesLoaded: false,
     linkTokenError: {
         error_type: "",
         error_code: "",
