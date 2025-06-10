@@ -6,9 +6,6 @@ export async function GET(req) {
     const data = await getChatInfo();
     return NextResponse.json(data);
   } catch (err) {
-    return NextResponse.json({
-      message: err.message,
-      status: 500,
-    });
+    return NextResponse.json({ message: err.message }, { status: 500 });
   }
 }

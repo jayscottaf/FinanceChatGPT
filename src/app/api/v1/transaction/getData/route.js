@@ -8,9 +8,6 @@ export async function POST(req) {
     console.log(JSON.stringify(data, null, 2));
     return NextResponse.json(data);
   } catch (err) {
-    return NextResponse.json({
-      message: err.message,
-      status: 500,
-    });
+    return NextResponse.json({ message: err.message }, { status: 500 });
   }
 }

@@ -8,9 +8,6 @@ export async function DELETE(req) {
     const data = await clearChatHistory();
     return NextResponse.json(data);
   } catch (err) {
-    return NextResponse.json({
-      message: err.message,
-      status: 500,
-    });
+    return NextResponse.json({ message: err.message }, { status: 500 });
   }
 }
