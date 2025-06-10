@@ -30,7 +30,7 @@ import {
 import { isEmpty } from "@/utils/util";
 import Modal from "@/components/Basic/Modal";
 import { signOut } from "next-auth/react";
-import toast from "react-hot-toast";
+import { useToast } from "@/hooks/use-toast";
 import apiCall from "@/utils/apiCall";
 import useGetAccounts from "@/hooks/useGetAccounts";
 import Link from "next/link";
@@ -41,6 +41,7 @@ export default function Setting() {
     const dispatch = useDispatch<AppDispatch>();
     const { user, items } = useSelector((state: RootState) => state.user);
     const accounts: Item[] = Array.isArray(items) ? (items as Item[]) : [];
+    const { toast } = useToast();
     const [userInfo, setUserInfo] = useState<User>({
         id: '',
         name: '',
@@ -77,6 +78,10 @@ export default function Setting() {
 
     const handleDelete = (item_id: string) => {
         dispatch(deleteItemInfoById(item_id));
+        toast({
+            title: "Account Removed",
+            description: "The account has been successfully removed.",
+        });
     };
 
     const setSalary = (salary: number) => {
@@ -90,12 +95,27 @@ export default function Setting() {
 
     const handleDeleteAccount = () => {
         apiCall.delete("/api/v1/user").then(() => {
+            toast({
+                title: "Account Deleted",
+                description: "Your account has been permanently deleted.",
+                variant: "destructive",
+            });
             signOut();
+        }).catch(() => {
+            toast({
+                title: "Error",
+                description: "Failed to delete account. Please try again.",
+                variant: "destructive",
+            });
         });
     };
 
     const handleUpdateUserInfo = () => {
         dispatch(updateUserInfo(userInfo));
+        toast({
+            title: "Settings Updated",
+            description: "Your user information has been successfully updated.",
+        });
     };
 
     return (
