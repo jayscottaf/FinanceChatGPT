@@ -32,7 +32,7 @@ const LoginForm = () => {
                     <div className="flex flex-col items-center space-y-4">
                         <Coins className="w-10 h-10 text-black mb-4" />
                         <div className="items-center px-6">
-                            <h1 className="text-2xl md:text-4xl font-bold text-black text-center">OpenAI Plaid Personal Finance Dashboard</h1>
+                            <h1 className="text-2xl md:text-4xl font-bold text-black text-center">My Budget Buddy Personal Finance Dashboard</h1>
                         </div>
                         <p className="text-center text-slate-700">Unlock a bird&apos;s eye view of your finances</p>
                         <Button

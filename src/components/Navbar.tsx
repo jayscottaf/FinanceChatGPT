@@ -55,7 +55,7 @@ const Navbar = () => {
                     <div className="flex items-center justify-center my-2 mr-4 font-bold text-black bg-gray-100 rounded-full w-11 h-11">
                         <Landmark />
                     </div>
-                    <Link href="/dashboard"><span className="text-center">Plaid AI Dashboard</span></Link>
+                    <Link href="/dashboard"><span className="text-center">My Budget Buddy Dashboard</span></Link>
                 </div>
                 <div className="absolute gap-2 space-x-4 transform -translate-x-1/2 left-1/2 hidden lg:flex">
                     {navItems.map((item, index) => {

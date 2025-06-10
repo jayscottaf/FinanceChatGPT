@@ -9,7 +9,7 @@ interface RootLayoutProps {
 export const metadata = {
     description:
         "Connect all of your accounts to browse transactions, analyze spend & use your personal AI assistant to ask Q&A for precise insights to your financial position",
-    title: "Plaid AI Dashboard | Personal Finance AI Assistant",
+    title: "My Budget Buddy | Personal Finance AI Assistant",
     icons: {
         icon: '/favicon.ico',
     }
