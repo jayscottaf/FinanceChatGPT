@@ -27,7 +27,7 @@ type AccountMap = { [key: string]: string };
 export default function Transactions() {
     const dispatch = useDispatch<AppDispatch>();
     const searchParams = useSearchParams();
-    const { isItemAccess, isTransactionsLoaded, categories } = useSelector(
+    const { isItemAccess, isTransactionsLoaded, categoriesLoaded } = useSelector(
         (state: RootState) => state.plaid
     );
     const { data: transactions, size: total } = useSelector((state: RootState) => state.transactions);
@@ -104,9 +104,9 @@ export default function Transactions() {
     }, [dispatch, selectedCategories, selectedAccounts, selectedPaymentChannel, filterDate, pageSize, merchantName, selectedFinCategories, fetchData]);
 
     useEffect(() => {
-        if (isEmpty(categories)) dispatch(getAllCategories());
+        if (!categoriesLoaded) dispatch(getAllCategories());
         if (isTransactionsLoaded) fetchData(1);
-    }, [isItemAccess, items, isTransactionsLoaded, dispatch, categories, fetchData]);
+    }, [isItemAccess, items, isTransactionsLoaded, dispatch, categoriesLoaded, fetchData]);
 
     // Create a mapping of account IDs to account names
     const accountIdToName: AccountMap = {};
@@ -159,8 +159,8 @@ export default function Transactions() {
         };
     });
 
-    // Use finalTransactions to determine loading state
-    const isLoading = !finalTransactions || finalTransactions.length === 0;
+    const isLoading = !categoriesLoaded;
+    const noTransactions = categoriesLoaded && finalTransactions.length === 0;
 
     return (
         <main className="min-h-screen p-2 sm:p-4 justify-center m-auto max-w-[95vw] sm:max-w-6xl">
@@ -300,6 +300,10 @@ export default function Transactions() {
                             {Spinner}
                         </Card>
                     </>
+                ) : noTransactions ? (
+                    <Card className="w-full p-8 flex justify-center items-center col-span-full">
+                        No transactions found
+                    </Card>
                 ) : (
                     kpis?.map((item, index) => (
                         <Card key={"kpis" + index} className="w-full p-3 sm:p-4">
@@ -317,17 +321,21 @@ export default function Transactions() {
                     <Card className="w-full p-8 flex justify-center items-center">
                         {Spinner}
                     </Card>
+                ) : noTransactions ? (
+                    <Card className="w-full p-8 flex justify-center items-center">
+                        No transactions found
+                    </Card>
                 ) : (
-                    <TransactionChart 
+                    <TransactionChart
                         button={
-                            <Button 
-                                onClick={toggleFilters} 
-                                variant="outline" 
+                            <Button
+                                onClick={toggleFilters}
+                                variant="outline"
                                 type="button"
                             >
                                 {showChart ? "Hide chart" : "Show chart"}
                             </Button>
-                        } 
+                        }
                     />
                 )
             )}
@@ -335,6 +343,10 @@ export default function Transactions() {
             {isLoading ? (
                 <Card className="mt-4 w-full p-8 flex justify-center items-center">
                     {Spinner}
+                </Card>
+            ) : noTransactions ? (
+                <Card className="mt-4 w-full p-8 flex justify-center items-center">
+                    No transactions found
                 </Card>
             ) : (
                 <ModernTable transactions={finalTransactions} />

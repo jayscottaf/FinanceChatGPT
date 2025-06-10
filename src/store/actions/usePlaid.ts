@@ -103,10 +103,17 @@ export const setAccounts = (payload: any) => (dispatch: Dispatch<Action>) => {
 };
 
 export const getAllCategories = () => async (dispatch: Dispatch<Action>) => {
-	try {
-		const res = await apiCall.get("/api/v1/plaid/categories");
-		dispatch({ type: SET_PLAID_CATEGORY_STATE, payload: res.data });
-	} catch (error) {
-		handleError(error);
-	}
+        try {
+                const res = await apiCall.get("/api/v1/plaid/categories");
+                dispatch({
+                        type: SET_PLAID_CATEGORY_STATE,
+                        payload: {
+                                categories: res.data.categories,
+                                personalFinanceCategories: res.data.personalFinanceCategories,
+                                categoriesLoaded: true
+                        }
+                });
+        } catch (error) {
+                handleError(error);
+        }
 };
