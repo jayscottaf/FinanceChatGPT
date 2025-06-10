@@ -284,28 +284,29 @@ export default function Setting() {
                     </TableHead>
 
                     <TableBody>
-                        {accounts && accounts.map(item => {
-                            return accounts.map((account, index) => (
-                                <TableRow key={`acc_${index}`}>
-                                    <TableCell>{index == 0 && item.institution.name}</TableCell>
-                                    <TableCell className="text-right">{account.name}</TableCell>
-                                    <TableCell className="text-right">{account.type}</TableCell>
-                                    <TableCell className="text-right">{account.subtype}</TableCell>
-                                    <TableCell className="text-right">
-                                        {index == 0 && (
-                                            <Icon
-                                                onClick={() => handleDelete(item.id)}
-                                                className="cursor-pointer"
-                                                icon={TrashIcon}
-                                                color="slate"
-                                                variant="simple"
-                                                tooltip="Remove this Access Account"
-                                            />
-                                        )}
-                                    </TableCell>
-                                </TableRow>
-                            ));
-                        })}
+                        {accounts &&
+                            accounts.map((item) =>
+                                item.accounts.map((account, index) => (
+                                    <TableRow key={`acc_${item.id}_${index}`}>
+                                        <TableCell>{index == 0 && item.institution.name}</TableCell>
+                                        <TableCell className="text-right">{account.name}</TableCell>
+                                        <TableCell className="text-right">{account.type}</TableCell>
+                                        <TableCell className="text-right">{account.subtype}</TableCell>
+                                        <TableCell className="text-right">
+                                            {index == 0 && (
+                                                <Icon
+                                                    onClick={() => handleDelete(item.id)}
+                                                    className="cursor-pointer"
+                                                    icon={TrashIcon}
+                                                    color="slate"
+                                                    variant="simple"
+                                                    tooltip="Remove this Access Account"
+                                                />
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
                     </TableBody>
                 </Table>
             </Card>
