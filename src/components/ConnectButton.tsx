@@ -10,10 +10,11 @@ import { isEmpty } from "@/utils/util";
 import { RootState } from "@/store";
 import { AnyAction } from 'redux';
 import { Dispatch } from 'redux';
+import { toast } from 'sonner'
 import { Button } from "./ui/button";
 
 const ConnectButton = ({ children, type, setShowConnectModal }: { children: React.ReactNode, type: string | number, setShowConnectModal: (show: boolean) => void }) => {
-    const { linkToken } = useSelector((state: RootState) => state.plaid);
+    const { linkToken, linkTokenError } = useSelector((state: RootState) => state.plaid);
     const { items: linkInfo } = useSelector((state: RootState) => state.user);
 
     const dispatch = useDispatch<Dispatch<AnyAction>>();
@@ -52,6 +53,12 @@ const ConnectButton = ({ children, type, setShowConnectModal }: { children: Reac
     const [openAfterFetch, setOpenAfterFetch] = useState(false);
 
     useEffect(() => {
+        if (linkTokenError && !isEmpty(linkTokenError.error_message)) {
+            toast.error(linkTokenError.error_message || 'Failed to create link token');
+        }
+    }, [linkTokenError]);
+
+    useEffect(() => {
         if (openAfterFetch && ready && !isEmpty(linkToken)) {
             open();
             setOpenAfterFetch(false);
@@ -82,7 +89,7 @@ const ConnectButton = ({ children, type, setShowConnectModal }: { children: Reac
     return (
         <Button
             onClick={handleOpenPlaidLink}
-            disabled={!ready || isEmpty(linkToken)}
+            disabled={!ready}
         >
             {children}
         </Button>

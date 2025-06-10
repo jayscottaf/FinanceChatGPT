@@ -10,12 +10,18 @@ const usePlaidInit = () => {
     const init = useCallback(async () => {
         const res = await apiCall.get("/api/v1/plaid/create_link_token");
         if (res.status !== 200) {
-            dispatch(setPlaidState({ linkToken: null, linkSuccess: true }));
+            dispatch(
+                setPlaidState({
+                    linkToken: null,
+                    linkSuccess: true,
+                    linkTokenError: res.data,
+                })
+            );
             return;
         }
         const data = await res.data;
         dispatch(
-            setPlaidState({ linkToken: data.link_token, linkSuccess: true })
+            setPlaidState({ linkToken: data.link_token, linkSuccess: true, linkTokenError: { error_message: "" } })
         );
     }, [dispatch, linkToken]);
 
