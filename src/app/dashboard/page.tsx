@@ -26,6 +26,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Spinner } from "@/components/chatui/spinner";
+import useGetAccounts from "@/hooks/useGetAccounts";
+import usePlaidInit from "@/hooks/usePlaidInit";
 
 interface KPI {
   title: string;
@@ -115,7 +117,7 @@ const convertItemsToAccounts = (items: Item[], accounts_info: AccountsInfo): Con
     const institutionName = item.institution.name;
     const accountsWithInstitutionName = item.accounts.map((account) => {
       const { balances, ...restAccount } = account;
-      
+
       const {
         available = null,
         current = 0,
@@ -337,6 +339,11 @@ export default function Dashboard() {
     toast.success("OpenAPI spec copied to clipboard!");
     toast.info("Copy & Paste the spec within the Custom GPT Configure tab");
   }
+
+  const [showConnectModal, setShowConnectModal] = useState(false);
+
+    useGetAccounts();
+    usePlaidInit();
 
   return (
     <>

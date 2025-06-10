@@ -8,22 +8,40 @@ const usePlaidInit = () => {
     const { linkToken, linkSuccess } = useSelector(state => state.plaid);
 
     const init = useCallback(async () => {
-        const res = await apiCall.get("/api/v1/plaid/create_link_token");
-        if (res.status !== 200) {
+        try {
+            console.log("Initializing Plaid link token...");
+            const res = await apiCall.get("/api/v1/plaid/create_link_token");
+            if (res.status !== 200) {
+                console.error("Failed to create link token:", res.data);
+                dispatch(
+                    setPlaidState({
+                        linkToken: null,
+                        linkSuccess: false,
+                        linkTokenError: res.data,
+                    })
+                );
+                return;
+            }
+            const data = await res.data;
+            console.log("Link token created successfully:", data);
+            dispatch(
+                setPlaidState({ 
+                    linkToken: data.link_token, 
+                    linkSuccess: true, 
+                    linkTokenError: { error_message: "" } 
+                })
+            );
+        } catch (error) {
+            console.error("Error initializing Plaid:", error);
             dispatch(
                 setPlaidState({
                     linkToken: null,
-                    linkSuccess: true,
-                    linkTokenError: res.data,
+                    linkSuccess: false,
+                    linkTokenError: { error_message: "Failed to initialize Plaid connection" },
                 })
             );
-            return;
         }
-        const data = await res.data;
-        dispatch(
-            setPlaidState({ linkToken: data.link_token, linkSuccess: true, linkTokenError: { error_message: "" } })
-        );
-    }, [dispatch, linkToken]);
+    }, [dispatch]);
 
     useEffect(() => {
         if (linkToken === null || linkSuccess === false) {

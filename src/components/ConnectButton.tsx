@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
@@ -18,39 +19,56 @@ const ConnectButton = ({ children, type, setShowConnectModal }: { children: Reac
     const { items: linkInfo } = useSelector((state: RootState) => state.user);
 
     const dispatch = useDispatch<Dispatch<AnyAction>>();
+    const [isLoading, setIsLoading] = useState(false);
 
     const onSuccess = useCallback(
         (public_token: any, metadata: any) => {
             const exchangePublicTokenForAccessToken = async () => {
-                const response = await apiCall.post("/api/v1/plaid/set_access_token", { public_token, metadata, type });
-                if (response.status !== 200) {
-                    dispatch(setPlaidState({ isItemAccess: false }) as unknown as AnyAction);
-                    return;
+                try {
+                    setIsLoading(true);
+                    const response = await apiCall.post("/api/v1/plaid/set_access_token", { public_token, metadata, type });
+                    if (response.status !== 200) {
+                        dispatch(setPlaidState({ isItemAccess: false }) as unknown as AnyAction);
+                        toast.error("Failed to connect account");
+                        return;
+                    }
+                    const { isItemAccess, item_id, accounts } = response.data;
+                    dispatch(setPlaidState({ isItemAccess: isItemAccess }) as unknown as AnyAction);
+                    if (!isEmpty(item_id)) {
+                        dispatch(
+                            setUserInfoState({
+                                items: [...linkInfo, { ...metadata, accounts }]
+                            })
+                        );
+                    }
+                    toast.success("Account connected successfully!");
+                    setShowConnectModal(false);
+                } catch (error) {
+                    console.error("Error connecting account:", error);
+                    toast.error("Failed to connect account");
+                } finally {
+                    setIsLoading(false);
                 }
-                const { isItemAccess, item_id, accounts } = response.data;
-                dispatch(setPlaidState({ isItemAccess: isItemAccess }) as unknown as AnyAction);
-                if (!isEmpty(item_id)) {
-                    dispatch(
-                        setUserInfoState({
-                            items: [...linkInfo, { ...metadata, accounts }]
-                        })
-                    );
-                }
-                setShowConnectModal(false);
             };
             exchangePublicTokenForAccessToken();
         },
         [dispatch, linkInfo, setShowConnectModal, type]
     );
 
+    const onExit = useCallback((err: any, metadata: any) => {
+        if (err != null) {
+            console.error("Plaid Link exited with error:", err);
+            toast.error("Connection cancelled or failed");
+        }
+    }, []);
+
     const config = {
-        token: !isEmpty(linkToken) ? linkToken[type].link_token : null,
-        onSuccess
+        token: linkToken && Array.isArray(linkToken) && linkToken[type as number] ? linkToken[type as number].link_token : null,
+        onSuccess,
+        onExit
     };
 
     const { open, ready } = usePlaidLink(config);
-
-    const [openAfterFetch, setOpenAfterFetch] = useState(false);
 
     useEffect(() => {
         if (linkTokenError && !isEmpty(linkTokenError.error_message)) {
@@ -58,40 +76,39 @@ const ConnectButton = ({ children, type, setShowConnectModal }: { children: Reac
         }
     }, [linkTokenError]);
 
-    useEffect(() => {
-        if (openAfterFetch && ready && !isEmpty(linkToken)) {
-            open();
-            setOpenAfterFetch(false);
+    const handleOpenPlaidLink = useCallback(() => {
+        if (!ready) {
+            toast.error("Plaid Link is not ready yet. Please try again in a moment.");
+            return;
         }
-    }, [openAfterFetch, ready, linkToken, open]);
 
-    const handleOpenPlaidLink = () => {
-        dispatch(
-            setPlaidState({
-                isItemAccess: false,
-                linkToken: null,
-                linkSuccess: false,
-            }) as unknown as AnyAction
-        );
-        setOpenAfterFetch(true);
-    };
+        if (!config.token) {
+            toast.error("No link token available. Please try again.");
+            dispatch(
+                setPlaidState({
+                    isItemAccess: false,
+                    linkToken: null,
+                    linkSuccess: false,
+                }) as unknown as AnyAction
+            );
+            return;
+        }
 
-    const setupConfig = {
-        token: !isEmpty(linkToken) ? linkToken[type].link_token : "Token not found",
-        open: open,
-        ready: ready,
-        onSuccess: onSuccess,
-        linkInfo: linkInfo,
-    }
-
-    console.log(setupConfig);
+        try {
+            open();
+        } catch (error) {
+            console.error("Error opening Plaid Link:", error);
+            toast.error("Failed to open account connection");
+        }
+    }, [ready, config.token, open, dispatch]);
 
     return (
         <Button
             onClick={handleOpenPlaidLink}
-            disabled={!ready}
+            disabled={!ready || isLoading || !config.token}
+            className="w-full"
         >
-            {children}
+            {isLoading ? "Connecting..." : children}
         </Button>
     );
 };
