@@ -6,9 +6,6 @@ export async function DELETE(req, { params }) {
     const data = await deleteItemInfoById(params.id);
     return NextResponse.json(data);
   } catch (err) {
-    return NextResponse.json({
-      message: err.message,
-      status: 500,
-    });
+    return NextResponse.json({ message: err.message }, { status: 500 });
   }
 }

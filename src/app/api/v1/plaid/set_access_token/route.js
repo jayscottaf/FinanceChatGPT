@@ -7,9 +7,6 @@ export async function POST(req) {
     const data = await setAccessToken(reqInfo);
     return NextResponse.json(data);
   } catch (err) {
-    return NextResponse.json({
-      message: err.message,
-      status: 500,
-    });
+    return NextResponse.json({ message: err.message }, { status: 500 });
   }
 }

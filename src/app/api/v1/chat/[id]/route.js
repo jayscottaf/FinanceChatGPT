@@ -9,10 +9,7 @@ export async function GET(req, { params }) {
     const data = await getChatInfoById(params.id);
     return NextResponse.json(data);
   } catch (err) {
-    return NextResponse.json({
-      message: err.message,
-      status: 500,
-    });
+    return NextResponse.json({ message: err.message }, { status: 500 });
   }
 }
 
@@ -21,9 +18,6 @@ export async function DELETE(req, { params }) {
     const data = await deleteChatChannel(params.id);
     return NextResponse.json(data);
   } catch (err) {
-    return NextResponse.json({
-      message: err.message,
-      status: 500,
-    });
+    return NextResponse.json({ message: err.message }, { status: 500 });
   }
 }
