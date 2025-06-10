@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePlaidLink } from "react-plaid-link";
 import { useDispatch, useSelector } from "react-redux";
 import { setPlaidState } from "@/store/actions/usePlaid";
@@ -49,9 +49,24 @@ const ConnectButton = ({ children, type, setShowConnectModal }: { children: Reac
 
     const { open, ready } = usePlaidLink(config);
 
+    const [openAfterFetch, setOpenAfterFetch] = useState(false);
+
+    useEffect(() => {
+        if (openAfterFetch && ready && !isEmpty(linkToken)) {
+            open();
+            setOpenAfterFetch(false);
+        }
+    }, [openAfterFetch, ready, linkToken, open]);
+
     const handleOpenPlaidLink = () => {
-        dispatch(setPlaidState({ isItemAccess: false, linkSuccess: false }) as unknown as AnyAction);
-        open();
+        dispatch(
+            setPlaidState({
+                isItemAccess: false,
+                linkToken: null,
+                linkSuccess: false,
+            }) as unknown as AnyAction
+        );
+        setOpenAfterFetch(true);
     };
 
     const setupConfig = {
