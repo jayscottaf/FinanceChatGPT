@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteItemInfoById, updateUserInfo } from "@/store/actions/useUser";
 import { CurrencyDollarIcon, InformationCircleIcon, TrashIcon, CalendarIcon } from "@heroicons/react/solid";
-import { countries, ICountry, TCountries } from "countries-list";
+import { countries, ICountry } from "countries-list";
 import {
     Card,
     Grid,
@@ -35,12 +35,12 @@ import apiCall from "@/utils/apiCall";
 import useGetAccounts from "@/hooks/useGetAccounts";
 import Link from "next/link";
 import { AppDispatch, RootState } from "@/store";
-import { User } from "@/lib/types";
+import { User, Item, Account } from "@/lib/types";
 
 export default function Setting() {
     const dispatch = useDispatch<AppDispatch>();
     const { user, items } = useSelector((state: RootState) => state.user);
-    const accounts = Array.isArray(items) ? items : [];
+    const accounts: Item[] = Array.isArray(items) ? (items as Item[]) : [];
     const [userInfo, setUserInfo] = useState<User>({
         id: '',
         name: '',
@@ -94,25 +94,8 @@ export default function Setting() {
         });
     };
 
-    const handleUpdatePro = () => {
-        toast.success("coming soon!");
-    };
-
     const handleUpdateUserInfo = () => {
         dispatch(updateUserInfo(userInfo));
-    };
-
-    const handleCheckProducts = (e: any) => {
-        if (isEmpty(e.target.checked)) return;
-        if (e.target.checked) {
-            setUserInfo({
-                ...userInfo
-            });
-        } else {
-            setUserInfo({
-                ...userInfo
-            });
-        }
     };
 
     return (
@@ -285,8 +268,8 @@ export default function Setting() {
 
                     <TableBody>
                         {accounts &&
-                            accounts.map((item) =>
-                                item.accounts.map((account, index) => (
+                            accounts.map((item: Item) =>
+                                item.accounts.map((account: Account, index: number) => (
                                     <TableRow key={`acc_${item.id}_${index}`}>
                                         <TableCell>{index == 0 && item.institution.name}</TableCell>
                                         <TableCell className="text-right">{account.name}</TableCell>
