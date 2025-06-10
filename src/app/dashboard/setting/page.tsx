@@ -267,16 +267,10 @@ export default function Setting() {
                     </TableHead>
 
                     <TableBody>
-<<<<<<< HEAD
-
-                        {accounts &&
-                            accounts.map((item: Item) =>
-                                item.accounts.map((account: Account, index: number) => (
-=======
                         {accounts &&
                             accounts.map((item) =>
                                 item.accounts.map((account, index) => (
->>>>>>> a069713 (same)
+
                                     <TableRow key={`acc_${item.id}_${index}`}>
                                         <TableCell>{index == 0 && item.institution.name}</TableCell>
                                         <TableCell className="text-right">{account.name}</TableCell>
@@ -297,10 +291,6 @@ export default function Setting() {
                                     </TableRow>
                                 ))
                             )}
-<<<<<<< HEAD
-
-=======
->>>>>>> a069713 (same)
                     </TableBody>
                 </Table>
             </Card>
