@@ -267,6 +267,7 @@ export default function Setting() {
                     </TableHead>
 
                     <TableBody>
+
                         {accounts &&
                             accounts.map((item: Item) =>
                                 item.accounts.map((account: Account, index: number) => (
@@ -290,6 +291,7 @@ export default function Setting() {
                                     </TableRow>
                                 ))
                             )}
+
                     </TableBody>
                 </Table>
             </Card>
