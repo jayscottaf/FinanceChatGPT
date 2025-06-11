@@ -267,8 +267,8 @@ export default function Setting() {
                     <Flex className="mt-4 space-x-2">
                         <Text className="w-1/3 truncate">Manage Users</Text>
                         <div className="flex w-full">
-                            <Link href="/dashboard/users" className="w-full">
-                                <Button color="slate" className="w-full">
+                            <Link href="/dashboard/users">
+                                <Button color="slate">
                                     View Users
                                 </Button>
                             </Link>
