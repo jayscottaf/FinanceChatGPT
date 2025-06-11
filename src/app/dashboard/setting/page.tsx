@@ -120,7 +120,7 @@ export default function Setting() {
 
     return (
         <main className="min-h-screen p-4 m-auto max-w-7xl bg-muted/50">
-            <Grid numItemsLg={2} className="gap-6 mt-6">
+            <Grid numItemsLg={3} className="gap-6 mt-6">
                 <Card className="px-4 sm:px-6">
                     <Metric className="truncate">User Info</Metric>
                     <Flex className="mt-4 space-x-2">
@@ -260,6 +260,19 @@ export default function Setting() {
                                 Save
                             </Button>
                         </Flex>
+                    </Flex>
+                </Card>
+                <Card className="px-4 sm:px-6">
+                    <Metric className="truncate">Admin</Metric>
+                    <Flex className="mt-4 space-x-2">
+                        <Text className="w-1/3 truncate">Manage Users</Text>
+                        <div className="flex w-full">
+                            <Link href="/dashboard/users" className="w-full">
+                                <Button color="slate" className="w-full">
+                                    View Users
+                                </Button>
+                            </Link>
+                        </div>
                     </Flex>
                 </Card>
             </Grid>
