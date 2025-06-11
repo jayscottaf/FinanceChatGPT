@@ -264,15 +264,13 @@ export default function Setting() {
                 </Card>
                 <Card className="px-4 sm:px-6">
                     <Metric className="truncate">Admin</Metric>
-                    <Flex className="mt-4 space-x-2">
-                        <Text className="w-1/3 truncate">Manage Users</Text>
-                        <div className="flex w-full">
-                            <Link href="/dashboard/users">
-                                <Button color="slate">
-                                    View Users
-                                </Button>
-                            </Link>
-                        </div>
+                    <Flex className="mt-4" justifyContent="between" alignItems="center">
+                        <Text>Manage Users</Text>
+                        <Link href="/dashboard/users">
+                            <Button color="slate">
+                                View Users
+                            </Button>
+                        </Link>
                     </Flex>
                 </Card>
             </Grid>
