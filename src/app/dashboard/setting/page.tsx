@@ -120,7 +120,7 @@ export default function Setting() {
 
     return (
         <main className="min-h-screen p-4 m-auto max-w-7xl bg-muted/50">
-            <Grid numItemsLg={3} className="gap-6 mt-6">
+            <Grid numItemsLg={2} className="gap-6 mt-6">
                 <Card className="px-4 sm:px-6">
                     <Metric className="truncate">User Info</Metric>
                     <Flex className="mt-4 space-x-2">
@@ -223,54 +223,6 @@ export default function Setting() {
                                 Update
                             </Button>
                         </Flex>
-                    </Flex>
-                </Card>
-                <Card className="px-4 sm:px-6">
-                    <Metric className="truncate">Twilio</Metric>
-                    <Flex className="mt-4 space-x-2">
-                        <Text className="w-2/3 truncate">Phone (consent to SMS, fees apply)</Text>
-                        <PhoneInput
-                            inputComponent={TextInput}
-                            placeholder="Enter phone number"
-                            value={userInfo?.phone ?? ""}
-                            onChange={phone =>
-                                setUserInfo({
-                                    ...userInfo,
-                                    phone
-                                })
-                            }
-                        />
-                    </Flex>
-                    <Flex className="mt-4 space-x-2">
-                        <Text className="w-1/3 truncate">Twilio Token</Text>
-                        <TextInput
-                            value={userInfo?.twilioToken ?? ""}
-                            onChange={e =>
-                                setUserInfo({
-                                    ...userInfo,
-                                    twilioToken: e.target.value
-                                })
-                            }
-                        />
-                    </Flex>
-                    <Flex className="mt-4 space-x-2">
-                        <div className="w-1/3 truncate" />
-                        <Flex>
-                            <Button color="slate" onClick={() => handleUpdateUserInfo()}>
-                                Save
-                            </Button>
-                        </Flex>
-                    </Flex>
-                </Card>
-                <Card className="px-4 sm:px-6">
-                    <Metric className="truncate">Admin</Metric>
-                    <Flex className="mt-4" justifyContent="between" alignItems="center">
-                        <Text>Manage Users</Text>
-                        <Link href="/dashboard/users">
-                            <Button color="slate">
-                                View Users
-                            </Button>
-                        </Link>
                     </Flex>
                 </Card>
                 <Card className="px-4 sm:px-6">
